@@ -6,7 +6,12 @@ on:
     # GitHub cron "best-effort"tur ve kayabilir; gerçek piyasa saati
     # kontrolü app/scan.py içinde (Europe/Istanbul) yapılır.
     - cron: "*/15 6-15 * * 1-5"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Piyasa saati kontrolünü atla (test için)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -38,11 +43,18 @@ jobs:
             printf '%s' "$HOLDINGS_JSON" > config/holdings.json
           fi
 
+      - name: Telegram bağlantı testi (sadece manuel/force tetiklemede)
+        if: ${{ inputs.force }}
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python -m app.notify "BIST Sinyal Bot: GitHub Actions bağlantı testi başarılı."
+
       - name: Taramayı çalıştır
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python -m app.scan
+        run: python -m app.scan ${{ inputs.force && '--ignore-market-hours' || '' }}
 
       - name: State dosyasını commit'le
         run: |

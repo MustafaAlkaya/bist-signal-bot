@@ -45,4 +45,5 @@ if __name__ == "__main__":
     text = sys.argv[1] if len(sys.argv) > 1 else "Test mesajı - BIST sinyal botu çalışıyor."
     ok = send_message(text)
     print("Gönderildi." if ok else "Gönderilemedi, TELEGRAM_BOT_TOKEN/CHAT_ID kontrol edin.")
+    sys.exit(0 if ok else 1)
 
