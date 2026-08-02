@@ -1,0 +1,12 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+venv/
+.streamlit/secrets.toml
+.claude/
+
+# Gerçek pozisyonlarınız (hisse adedi/maliyet) - asla commit'lenmez.
+# Yerelde bu dosyayı holdings.example.json'dan kopyalayıp gerçek verilerinizi girin.
+# GitHub Actions'a bu veri HOLDINGS_JSON secret'ı üzerinden aktarılır (bkz. README).
+config/holdings.json

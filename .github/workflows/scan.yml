@@ -1,0 +1,53 @@
+name: BIST Sinyal Taraması
+
+on:
+  schedule:
+    # Geniş ağ: 06:00-15:00 UTC = 09:00-18:00 TRT, hafta içi.
+    # GitHub cron "best-effort"tur ve kayabilir; gerçek piyasa saati
+    # kontrolü app/scan.py içinde (Europe/Istanbul) yapılır.
+    - cron: "*/15 6-15 * * 1-5"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bist-scan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Python kurulumu
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Bağımlılıkları kur
+        run: pip install -r requirements.txt
+
+      - name: Portföy dosyasını oluştur (secret'tan, commit'lenmez)
+        env:
+          HOLDINGS_JSON: ${{ secrets.HOLDINGS_JSON }}
+        run: |
+          if [ -n "$HOLDINGS_JSON" ]; then
+            printf '%s' "$HOLDINGS_JSON" > config/holdings.json
+          fi
+
+      - name: Taramayı çalıştır
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python -m app.scan
+
+      - name: State dosyasını commit'le
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/state.json
+          git diff --staged --quiet || git commit -m "State güncellendi $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push
