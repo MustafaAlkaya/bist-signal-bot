@@ -48,7 +48,8 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python -m app.notify "BIST Sinyal Bot: GitHub Actions bağlantı testi başarılı."
+        run: |
+          python -m app.notify "BIST Sinyal Bot - GitHub Actions bağlantı testi başarılı."
 
       - name: Taramayı çalıştır
         env:
