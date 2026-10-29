@@ -56,18 +56,18 @@
     "sma_slow": 73.86
   },
   "ALARK.IS": {
-    "bb_lower": 97.41,
-    "bb_upper": 111.86,
+    "bb_lower": 96.03,
+    "bb_upper": 112.69,
     "held": false,
     "last_changed": "2026-10-22T11:03:22.555787+00:00",
-    "last_close": 98.35,
-    "macd": -1.7732,
-    "macd_signal": -0.9297,
-    "rsi": 36.56,
-    "score": -1,
+    "last_close": 94.3,
+    "macd": -2.4167,
+    "macd_signal": -1.2424,
+    "rsi": 31.46,
+    "score": 0,
     "signal": "HOLD",
-    "sma_fast": 104.64,
-    "sma_slow": 107.48
+    "sma_fast": 104.36,
+    "sma_slow": 107.08
   },
   "ALTNY.IS": {
     "bb_lower": 9.84,
